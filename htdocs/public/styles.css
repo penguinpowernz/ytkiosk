@@ -1,0 +1,26 @@
+.container.cards {
+  width: 1000px;
+}
+
+.container.cards .row,
+.container.cards .card {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.played {
+  opacity: 0.4;
+}
+
+.playing {
+  border-width: 3px;
+}
+
+.seekbar {
+  width: 400px;
+}
+
+#new-video {
+  width: 800px;
+}
