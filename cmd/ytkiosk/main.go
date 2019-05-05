@@ -10,7 +10,10 @@ import (
 func main() {
 	mpv := ytkiosk.NewMPV("/tmp/mpv", "/home/robert/Pictures/100CANON/IMG_4438.JPG")
 	go func() {
-		tell.IfFatalf(mpv.Start(), "while starting")
+		for {
+			tell.IfErrorf(mpv.Start(), "while starting MPV")
+			time.Sleep(time.Second)
+		}
 	}()
 
 	mpv.WaitForConnection()
