@@ -59,3 +59,18 @@ func getVideoTitle(url string) string {
 	x := r.FindStringSubmatch(b.String())
 	return strings.Replace(x[1], " - YouTube", "", -1)
 }
+
+func getVideoTitleWithErr(url string) (string, error) {
+	http.DefaultClient.Timeout = 10 * time.Second
+	res, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+
+	b := bytes.NewBuffer([]byte{})
+	b.ReadFrom(res.Body)
+
+	r := regexp.MustCompile("<title>(.*)</title>")
+	x := r.FindStringSubmatch(b.String())
+	return strings.Replace(x[1], " - YouTube", "", -1), nil
+}
