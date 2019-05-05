@@ -1,2 +1,4 @@
 bin/*
 config.yml
+dpkg/**/usr/bin/ytkiosk
+*.deb
