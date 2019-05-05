@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/ghodss/yaml"
@@ -21,7 +22,8 @@ type config struct {
 var cfgFile string
 
 func main() {
-	flag.StringVar(&cfgFile, "-c", "config.yml", "the config file to use")
+	defaultCfg := os.Getenv("HOME") + "/.ytkiosk.yml"
+	flag.StringVar(&cfgFile, "-c", defaultCfg, "the config file to use")
 	flag.Parse()
 
 	data, err := ioutil.ReadFile(cfgFile)
