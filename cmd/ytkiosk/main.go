@@ -1,19 +1,40 @@
 package main
 
 import (
+	"flag"
+	"io/ioutil"
 	"time"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/penguinpowernz/go-ian/util/tell"
 	"github.com/penguinpowernz/ytkiosk"
+	yaml "gopkg.in/yaml.v2"
 )
 
-var discordChannel = ""
-var discordToken = ""
+
+type config struct {
+	DiscordChannel string `json:"discord_channel"`
+	DiscordToken   string `json:"discord_token"`
+	BackdropImage  string `json:"backdrop_image"`
+}
+
+var cfgFile string
 
 func main() {
-	mpv := ytkiosk.NewMPV("/tmp/mpv", "/home/robert/Pictures/100CANON/IMG_4438.JPG")
+	flag.StringVar(&cfgFile, "-c", "ytkiosk.yml", "the config file to use")
+	flag.Parse()
+
+	data, err := ioutil.ReadFile(cfgFile)
+	if err != nil {
+		tell.IfFatalf(err, "while reading config")
+	}
+
+	var cfg config
+	err = yaml.Unmarshal(data, &cfg)
+	tell.IfFatalf(err, "while parsing YAML")
+
+	mpv := ytkiosk.NewMPV("/tmp/mpv", cfg.BackdropImage)
 	go func() {
 		for {
 			tell.IfErrorf(mpv.Start(), "while starting MPV")
@@ -32,14 +53,16 @@ func main() {
 	eng.AttachAPI(api.Group("/api"))
 	go api.Run(":8181")
 
-	bot, err := ytkiosk.NewDiscordBot(discordToken, discordChannel)
-	if err != nil {
-		panic(err)
-	}
+	if cfg.DiscordToken != "" {
+		bot, err := ytkiosk.NewDiscordBot(cfg.DiscordToken, cfg.DiscordChannel)
+		if err != nil {
+			panic(err)
+		}
 
-	bot.Say("I'm awake")
-	eng.AttachDiscord(bot)
-	defer bot.Kill()
+		bot.Say("I'm awake")
+		eng.AttachDiscord(bot)
+		defer bot.Kill()
+	}
 
 	eng.Run()
 }
