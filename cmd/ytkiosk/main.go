@@ -22,7 +22,7 @@ type config struct {
 var cfgFile string
 
 func main() {
-	flag.StringVar(&cfgFile, "-c", "ytkiosk.yml", "the config file to use")
+	flag.StringVar(&cfgFile, "-c", "config.yml", "the config file to use")
 	flag.Parse()
 
 	data, err := ioutil.ReadFile(cfgFile)
