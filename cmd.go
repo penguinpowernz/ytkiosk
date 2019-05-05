@@ -14,19 +14,15 @@ import (
 func NewMPV(socket, image string) *MPV {
 	mpv := &MPV{
 		socket:   socket,
-		Cmd:      exec.Command("/usr/bin/mpv", "--fs", "--fs-screen=0", "--input-unix-socket="+socket, image, "--keep-open=yes", "--keep-open-pause=no", "--force-window=yes", "--image-display-duration=inf"),
-		killChan: make(chan struct{}),
-		conn:     nil,
+		backdrop: image,
 	}
-
-	mpv.Stdout = os.Stdout
-	mpv.Stderr = os.Stderr
 
 	return mpv
 }
 
 type MPV struct {
-	socket string
+	socket   string
+	backdrop string
 	*exec.Cmd
 	killChan          chan struct{}
 	conn              *mpvipc.Connection
@@ -35,6 +31,12 @@ type MPV struct {
 	listenCancel      chan struct{}
 	playbackCancelled bool
 	connected         bool
+}
+
+func (mpv *MPV) ResetCommand() {
+	mpv.Cmd = exec.Command("/usr/bin/mpv", "--fs", "--fs-screen=0", "--input-unix-socket="+mpv.socket, mpv.backdrop, "--keep-open=yes", "--keep-open-pause=no", "--force-window=yes", "--image-display-duration=inf")
+	mpv.Stdout = os.Stdout
+	mpv.Stderr = os.Stderr
 }
 
 func (mpv *MPV) Sub() (int, Subscription) {
@@ -60,6 +62,9 @@ func (mpv *MPV) Publish(ev mpvipc.Event) {
 }
 
 func (mpv *MPV) Start() error {
+	mpv.killChan = make(chan struct{})
+	mpv.ResetCommand()
+
 	var rerr error
 	go func() {
 		if err := mpv.Cmd.Run(); err != nil {
@@ -87,7 +92,9 @@ func (mpv *MPV) Start() error {
 
 	mpv.connected = true
 	<-mpv.killChan
+	mpv.connected = false
 	close(mpv.listenCancel)
+	mpv.conn.Close()
 	tell.Debugf("%T %+v", rerr, rerr)
 	return rerr
 }
