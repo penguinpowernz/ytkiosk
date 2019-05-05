@@ -5,13 +5,12 @@ import (
 	"io/ioutil"
 	"time"
 
+	"github.com/ghodss/yaml"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/penguinpowernz/go-ian/util/tell"
 	"github.com/penguinpowernz/ytkiosk"
-	yaml "gopkg.in/yaml.v2"
 )
-
 
 type config struct {
 	DiscordChannel string `json:"discord_channel"`
