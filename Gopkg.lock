@@ -10,6 +10,14 @@
   revision = "2a226fa01bbda228d7cd2d589e3e88f15ba16620"
 
 [[projects]]
+  digest = "1:fc4f149402c1fa7258290c3f91b0bfbc709763f3d3899609a2e4a0163dec65c6"
+  name = "github.com/bwmarrin/discordgo"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8325a6bf6dd6c91ed4040a1617b07287b8fb0eba"
+  version = "v0.19.0"
+
+[[projects]]
   branch = "master"
   digest = "1:a4b5a6b32f33323c7850fae4ec085a0fbac3be93c057b6b8cef5bcabe24645ac"
   name = "github.com/gin-contrib/sse"
@@ -45,6 +53,14 @@
   pruneopts = "UT"
   revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
   version = "v1.3.1"
+
+[[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:f5a2051c55d05548d2d4fd23d244027b59fbd943217df8aa3b5e170ac2fd6e1b"
@@ -96,9 +112,25 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fff35fc303f9d468dd3efb5cc39a8d7d0b816d3e46f8574de776774d1cfb0008"
+  digest = "1:c7f568b721ad4e52db37c854a330be94b2aaa16968c5122a3d4fcc6d9c6f1843"
+  name = "golang.org/x/crypto"
+  packages = [
+    "internal/subtle",
+    "nacl/secretbox",
+    "poly1305",
+    "salsa20/salsa",
+  ]
+  pruneopts = "UT"
+  revision = "a29dc8fdc73485234dbef99ebedb95d2eced08de"
+
+[[projects]]
+  branch = "master"
+  digest = "1:263a5ac51439cb9afdef5ef3d520f9e9dab4f20df8c55e8145d4178e2d423ca3"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "cpu",
+    "unix",
+  ]
   pruneopts = "UT"
   revision = "e4093980e83e70784fc393a93d5620e2654097f0"
 
@@ -131,9 +163,11 @@
   analyzer-version = 1
   input-imports = [
     "github.com/DexterLB/mpvipc",
+    "github.com/bwmarrin/discordgo",
     "github.com/gin-contrib/static",
     "github.com/gin-gonic/gin",
     "github.com/penguinpowernz/go-ian/util/tell",
+    "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
